@@ -12,7 +12,11 @@ import (
 func (r *Recon) getPath() string {
 	// RFC3339
 	t := time.Now().Format(time.RFC3339)
-	return path.Join("result", t)
+	home := os.Getenv("HOME")
+	if home == "" {
+		log.Panicf("No $HOME in env")
+	}
+	return path.Join(home, "wifi-recon", "result", t)
 }
 
 func (r *Recon) ensurePath() error {
