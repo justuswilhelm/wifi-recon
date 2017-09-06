@@ -16,7 +16,13 @@ func (r *Recon) getPath() string {
 	if home == "" {
 		log.Panicf("No $HOME in env")
 	}
-	return path.Join(home, "wifi-recon", "result", t)
+	var folderName string
+	if r.Config.Name != "" {
+		folderName = fmt.Sprintf("%s-%s", t, r.Config.Name)
+	} else {
+		folderName = t
+	}
+	return path.Join(home, "wifi-recon", "result", folderName)
 }
 
 func (r *Recon) ensurePath() error {

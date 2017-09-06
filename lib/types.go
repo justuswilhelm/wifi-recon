@@ -32,6 +32,7 @@ type Recon struct {
 // ReconConfig stores common parameters such as output path
 type ReconConfig struct {
 	InterfaceName string
+	Name          string
 	Path          string
 }
 

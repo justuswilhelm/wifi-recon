@@ -11,10 +11,13 @@ import (
 var (
 	// Interface to use
 	Interface = ""
+	// Name for dump files
+	Name = ""
 )
 
 func init() {
 	flag.StringVar(&Interface, "I", "", "Interface to use")
+	flag.StringVar(&Name, "N", "", "Name to use for this dump")
 }
 
 func main() {
@@ -29,6 +32,7 @@ func main() {
 	}
 	r := &lib.Recon{
 		Config: &lib.ReconConfig{
+			Name:          Name,
 			InterfaceName: Interface,
 			Path:          directory,
 		},
