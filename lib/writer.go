@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -33,6 +34,8 @@ func (r *Recon) ensurePath() error {
 
 // WriteResults outputs recon results
 func (r *Recon) WriteResults() error {
+	outDir := r.getPath()
+
 	if len(r.Results) == 0 {
 		return fmt.Errorf("There are no results to write")
 	}
@@ -45,13 +48,22 @@ func (r *Recon) WriteResults() error {
 			continue
 		}
 		n := result.Name
-		out := r.getPath()
-		path := path.Join(out, n)
+		path := path.Join(outDir, n)
 		log.Printf("Writing result %s to %s", n, path)
 		err := ioutil.WriteFile(path, result.Output.Bytes(), 0666)
 		if err != nil {
 			return fmt.Errorf("Error when writing to file: %+v", err)
 		}
+	}
+	jsonFile := fmt.Sprintf("recon_result.json")
+	jsonPath := path.Join(outDir, jsonFile)
+	log.Printf("Writing results summary to %s", jsonPath)
+	b, err := json.Marshal(r.Results)
+	if err != nil {
+		return fmt.Errorf("Error when marshalling results: %+v", err)
+	}
+	if err := ioutil.WriteFile(jsonPath, b, 0666); err != nil {
+		return fmt.Errorf("Error when writing %s: %+v", jsonPath, err)
 	}
 	return nil
 }
